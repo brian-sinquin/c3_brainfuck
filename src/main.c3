@@ -1,10 +1,11 @@
 module brainfuck;
 import std::io;
 
+const MAX_FILESIZE = 10*2048;
 
 fn int main(String[] args)
 {
-	if (args.len <2 ) 
+	if (args.len < 2) 
 	{
 		io::printfn("Usage: %s <file>", args[0]);
 		return -1;
@@ -15,7 +16,12 @@ fn int main(String[] args)
 		return -1;
 	}
 
-	//Add file size control
+	usz size = io::file::get_size(args[1])!!;
+	if (size > MAX_FILESIZE )
+	{
+		io::printfn("File size is too big : %s / %s bytes", size, MAX_FILESIZE);
+		return -1;
+	}
 
     char[]! program = io::file::load_new(args[1]);
     if (catch excuse = program)
@@ -28,3 +34,4 @@ fn int main(String[] args)
 
 	return 0;
 }
+
